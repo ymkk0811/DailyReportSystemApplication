@@ -64,6 +64,10 @@ public class EmployeeService {
 
         employee2.setDeleteFlg(false);
 
+        Employee dbemployee=findByCode(code);
+        LocalDateTime dbcreate_at=dbemployee.getCreatedAt();
+
+        employee2.setCreatedAt(dbcreate_at);
         LocalDateTime now = LocalDateTime.now();
         employee2.setUpdatedAt(now);
 
