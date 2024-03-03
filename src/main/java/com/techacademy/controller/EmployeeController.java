@@ -109,22 +109,20 @@ public class EmployeeController {
     //　■エラー時更新画面再表示用
     public String edit(@PathVariable ("code")String code,Employee employee, BindingResult res, Model model1) {
         model1.addAttribute("employee", employee);
-        model1.addAttribute("bindingResult",res);
 
         return "employees/update";
     }
 
     // ■従業員更新処理
     @PostMapping(value = "/{code}/update")
-    public String update(@PathVariable String code, Model model,@Validated Employee employee2, BindingResult res, Model model1) {
+    public String update(@PathVariable String code, Model model,@Validated Employee employee, BindingResult res) {
         // !!　voidをStringに直すこと
         //System.out.println(code);//codeが画面から渡されているか確認用（クラスをvoidにすること）
 
         // 入力チェック
         if (res.hasErrors()) {
 
-            model1.addAttribute("employee", employeeService.findByCode(code));
-            return edit(code,employee2, res, model1);
+            return edit(code,employee, res, model);
             //System.out.println("入力チェック時");//エラー内容確認用（クラスをvoidにすること）
         }
 
@@ -140,18 +138,18 @@ public class EmployeeController {
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
-            ErrorKinds result = employeeService.save(code,employee2);
+            ErrorKinds result = employeeService.save(code,employee);
 
             if (ErrorMessage.contains(result)) {
-                model1.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return edit(code,employee2, res, model1);
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return edit(code,employee, res, model);
                 //System.out.println("サービスからの戻り値がエラー"+res);//エラー内容確認用（クラスをvoidにすること）
             }
 
         } catch (DataIntegrityViolationException e) {
-            model1.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return edit(code,employee2, res, model1);
+            return edit(code,employee, res, model);
             //System.out.println("削除フラグの例外発生");//エラー内容確認用（クラスをvoidにすること）
         }
 

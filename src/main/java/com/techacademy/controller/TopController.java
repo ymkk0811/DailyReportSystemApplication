@@ -13,10 +13,10 @@ public class TopController {
         return "login/login";
     }
 
-    // ログイン後のトップページ表示
+    // ■ログイン後のトップページ表示
     @GetMapping(value = "/")
     public String top() {
-        return "redirect:/employees";
+        return "redirect:/reports";
     }
 
 }
