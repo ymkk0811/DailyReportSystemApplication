@@ -109,6 +109,8 @@ public class EmployeeController {
     //　■エラー時更新画面再表示用
     public String edit(@PathVariable ("code")String code,Employee employee, BindingResult res, Model model1) {
         model1.addAttribute("employee", employee);
+        model1.addAttribute("bindingResult",res);
+
         return "employees/update";
     }
 
